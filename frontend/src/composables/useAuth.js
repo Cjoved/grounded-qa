@@ -1,23 +1,37 @@
-import { ref } from "vue";
+import { ref } from 'vue'
+import supabase from '@/services/supabase'
 
-// TODO (Week 1): initialize the Supabase client here with
-// import.meta.env.VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY, and check
-// against ALLOWED_EMAIL (enforced server-side too — never trust the
-// frontend check alone).
-
-const user = ref(null);
-const isAuthenticated = ref(false);
+const user = ref(null)
+const isAuthenticated = ref(false)
 
 export function useAuth() {
   async function signIn(email, password) {
-    // TODO (Week 1): call supabase.auth.signInWithPassword
-    throw new Error("Not implemented");
+    if (!supabase) throw new Error('Supabase not configured')
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) throw error
+    user.value = data.user
+    isAuthenticated.value = true
+    return data.session
   }
 
   async function signOut() {
-    // TODO (Week 1): call supabase.auth.signOut
-    throw new Error("Not implemented");
+    if (!supabase) return
+    const { error } = await supabase.auth.signOut()
+    if (error) throw error
+    user.value = null
+    isAuthenticated.value = false
   }
 
-  return { user, isAuthenticated, signIn, signOut };
+  async function checkSession() {
+    if (!supabase) return null
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session) {
+      user.value = session.user
+      isAuthenticated.value = true
+      return session
+    }
+    return null
+  }
+
+  return { user, isAuthenticated, signIn, signOut, checkSession }
 }

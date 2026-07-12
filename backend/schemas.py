@@ -56,3 +56,26 @@ class EvalRunResponse(BaseModel):
     run_id: str
     results: list[EvalResult]
     summary: EvalSummary
+
+
+# Auth schemas (Phase 1.1)
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str
+    expires_in: int
+
+
+class SignupRequest(BaseModel):
+    email: str
+    password: str
+
+
+class SignupResponse(BaseModel):
+    id: str
+    email: str
+    created_at: str

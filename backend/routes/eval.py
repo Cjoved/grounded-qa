@@ -4,22 +4,23 @@ format, API contract, and metric conventions.
 Week 3 task: wire this up to services/eval_harness.py.
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from schemas import EvalRunResponse
+from services.auth import require_auth
 
 router = APIRouter()
 
 
 @router.post("/eval/run", response_model=EvalRunResponse)
-async def run_eval():
+async def run_eval(user=Depends(require_auth)):
     from services.eval_harness import run_eval as run_eval_service
 
     return run_eval_service()
 
 
 @router.get("/eval/history")
-async def eval_history():
+async def eval_history(user=Depends(require_auth)):
     # TODO (Week 3): past runs now live in LangSmith as experiments against
     # the "grounded-qa-eval-set" dataset (services/eval_harness.py
     # DATASET_NAME), not in our own DB — list them with

@@ -1,34 +1,31 @@
 <script setup>
-import { ref } from "vue";
-import ChatPanel from "./components/ChatPanel.vue";
-import EvalDashboard from "./components/EvalDashboard.vue";
-import UploadPanel from "./components/UploadPanel.vue";
+import { onMounted } from 'vue'
+import { RouterView } from 'vue-router'
+import { useAuth } from '@/composables/useAuth'
 
-const tab = ref("chat");
+const { isAuthenticated, checkSession } = useAuth()
+
+onMounted(() => {
+  checkSession()
+})
 </script>
 
 <template>
   <div class="min-h-screen bg-white text-gray-900">
-    <header class="border-b px-6 py-4">
-      <h1 class="text-xl font-semibold">Grounded Q&A</h1>
-    </header>
+    <router-view v-slot="{ Component }">
+      <header v-if="isAuthenticated" class="border-b px-6 py-4">
+        <h1 class="text-xl font-semibold">Grounded Q&A</h1>
+      </header>
 
-    <nav class="flex gap-4 px-6 py-3 border-b text-sm">
-      <button @click="tab = 'chat'" :class="tab === 'chat' ? 'font-semibold' : 'text-gray-500'">
-        Chat
-      </button>
-      <button @click="tab = 'documents'" :class="tab === 'documents' ? 'font-semibold' : 'text-gray-500'">
-        Documents
-      </button>
-      <button @click="tab = 'eval'" :class="tab === 'eval' ? 'font-semibold' : 'text-gray-500'">
-        Eval
-      </button>
-    </nav>
+      <nav v-if="isAuthenticated" class="flex gap-4 px-6 py-3 border-b text-sm">
+        <router-link to="/chat" class="text-gray-500 hover:text-gray-900">Chat</router-link>
+        <router-link to="/documents" class="text-gray-500 hover:text-gray-900">Documents</router-link>
+        <router-link to="/eval" class="text-gray-500 hover:text-gray-900">Eval</router-link>
+      </nav>
 
-    <main class="max-w-3xl mx-auto px-6 py-6" style="height: calc(100vh - 130px)">
-      <ChatPanel v-if="tab === 'chat'" />
-      <UploadPanel v-else-if="tab === 'documents'" />
-      <EvalDashboard v-else-if="tab === 'eval'" />
-    </main>
+      <main class="max-w-3xl mx-auto px-6 py-6" style="height: calc(100vh - 130px)">
+        <component :is="Component" />
+      </main>
+    </router-view>
   </div>
 </template>

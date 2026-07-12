@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from config import LANGSMITH_API_KEY, LANGSMITH_PROJECT, LANGSMITH_TRACING
+from routes.auth import router as auth_router
 from routes.ask import router as ask_router
 from routes.eval import router as eval_router
 from routes.upload import router as upload_router
@@ -27,6 +28,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_router)
 app.include_router(upload_router)
 app.include_router(ask_router)
 app.include_router(eval_router)

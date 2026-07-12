@@ -9,15 +9,16 @@ services/retrieval.search and services/generation.generate_answer — once
 those work, this route works too, no changes needed here.
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from graphs.ask_graph import run_ask
 from schemas import AskRequest, AskResponse
+from services.auth import require_auth
 
 router = APIRouter()
 
 
 @router.post("/ask", response_model=AskResponse)
-async def ask_question(payload: AskRequest):
+async def ask_question(payload: AskRequest, user=Depends(require_auth)):
     result = run_ask(payload.question, payload.top_k)
     return AskResponse(answer=result["answer"], sources=result["sources"])
