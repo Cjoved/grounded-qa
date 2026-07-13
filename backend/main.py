@@ -7,6 +7,7 @@ from config import LANGSMITH_API_KEY, LANGSMITH_PROJECT, LANGSMITH_TRACING
 from routes.auth import router as auth_router
 from routes.ask import router as ask_router
 from routes.eval import router as eval_router
+from routes.documents import router as documents_router
 from routes.upload import router as upload_router
 
 logger = logging.getLogger("grounded_qa")
@@ -30,6 +31,7 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(upload_router)
+app.include_router(documents_router)
 app.include_router(ask_router)
 app.include_router(eval_router)
 

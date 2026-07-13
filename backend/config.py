@@ -15,6 +15,9 @@ AI_BASE_URL = os.environ.get("AI_BASE_URL", "https://openrouter.ai/api/v1")
 AI_API_KEY = os.environ.get("AI_API_KEY", "")
 AI_MODEL = os.environ.get("AI_MODEL", "openrouter/free")
 
+# Embeddings (FastEmbed local ONNX, no GPU, no API cost)
+EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "BAAI/bge-small-en-v1.5")
+
 # Qdrant
 QDRANT_URL = os.environ.get("QDRANT_URL", "")
 QDRANT_API_KEY = os.environ.get("QDRANT_API_KEY", "")

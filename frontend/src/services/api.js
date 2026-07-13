@@ -52,3 +52,7 @@ export function runEval() {
 export function getEvalHistory() {
   return request('/eval/history')
 }
+
+export function deleteDocument(documentId) {
+  return request(`/documents/${documentId}`, { method: 'DELETE' })
+}

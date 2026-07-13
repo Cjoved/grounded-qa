@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { listDocuments, uploadFile } from "../services/api";
+import { listDocuments, uploadFile, deleteDocument as apiDeleteDocument } from "../services/api";
 
 export function useUpload() {
   const documents = ref([]);
@@ -9,8 +9,7 @@ export function useUpload() {
   async function loadDocuments() {
     error.value = "";
     try {
-      const res = await listDocuments();
-      documents.value = res.documents;
+      documents.value = await listDocuments();
     } catch (e) {
       error.value = e.message;
     }
@@ -29,5 +28,15 @@ export function useUpload() {
     }
   }
 
-  return { documents, uploading, error, loadDocuments, upload };
+  async function deleteDocument(documentId) {
+    error.value = "";
+    try {
+      await apiDeleteDocument(documentId);
+      await loadDocuments();
+    } catch (e) {
+      error.value = e.message;
+    }
+  }
+
+  return { documents, uploading, error, loadDocuments, upload, deleteDocument };
 }
